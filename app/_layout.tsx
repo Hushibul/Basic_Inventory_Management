@@ -1,24 +1,34 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import '@/global.css';
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import { initializeDatabase } from '@/lib/database';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    initializeDatabase().catch((error) => {
+      console.error('Database init failed', error);
+    });
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+    <>
+      <Stack
+        screenOptions={{
+          headerTintColor: '#0F172A',
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: '#F8FAFC' },
+          headerTitleStyle: { fontWeight: '700' },
+          contentStyle: { backgroundColor: '#F8FAFC' },
+        }}>
+        <Stack.Screen name="index" options={{ title: 'Inventory' }} />
+        <Stack.Screen name="exports" options={{ title: 'CSV exports' }} />
+        <Stack.Screen name="product" options={{ title: 'Product details' }} />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <StatusBar style="dark" />
+    </>
   );
 }
