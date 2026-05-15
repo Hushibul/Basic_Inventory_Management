@@ -40,7 +40,7 @@ type FieldProps = {
 function Field({ label, error, children }: FieldProps) {
   return (
     <View className="mb-4">
-      <Text className="mb-2 text-sm font-medium text-ink">{label}</Text>
+      <Text className="mb-2 text-xs font-semibold uppercase tracking-[1.5px] text-slate">{label}</Text>
       {children}
       {error ? <Text className="mt-2 text-sm text-danger">{error}</Text> : null}
     </View>
@@ -50,8 +50,8 @@ function Field({ label, error, children }: FieldProps) {
 function Input(props: ComponentProps<typeof TextInput>) {
   return (
     <TextInput
-      className="rounded-2xl border border-mist bg-white px-4 py-3 text-base text-ink"
-      placeholderTextColor="#94A3B8"
+      className="rounded-[22px] border border-[#F3D8BF] bg-surface px-4 py-3.5 text-base text-charcoal"
+      placeholderTextColor="#64748B"
       {...props}
     />
   );
@@ -179,7 +179,7 @@ export default function ProductScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-canvas">
+    <SafeAreaView className="flex-1 bg-surface">
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -188,6 +188,20 @@ export default function ProductScreen() {
           className="flex-1"
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{ padding: 20, paddingBottom: 120 }}>
+          <View className="mb-5 overflow-hidden rounded-[30px] bg-charcoal px-5 pb-5 pt-5">
+            <View className="absolute right-0 top-0 h-28 w-28 rounded-full bg-tomato/20" />
+            <Text className="text-xs font-semibold uppercase tracking-[2px] text-peach">
+              {isEditing ? 'Edit listing' : 'New listing'}
+            </Text>
+            <Text className="mt-2 text-3xl font-bold text-white">
+              {isEditing ? 'Refresh product details.' : 'Add next best seller.'}
+            </Text>
+            <Text className="mt-3 text-sm leading-6 text-[#FDE7D3]">
+              Keep stock, sold count, pricing, supplier, and photo in one polished card.
+            </Text>
+          </View>
+
+          <View className="rounded-[30px] border border-[#F3D8BF] bg-white px-4 py-4">
           <Controller
             control={control}
             name="imageUri"
@@ -348,24 +362,25 @@ export default function ProductScreen() {
           />
 
           {currentProduct ? (
-            <View className="mb-6 rounded-2xl border border-mist bg-white px-4 py-3">
-              <Text className="text-xs uppercase tracking-wide text-slate">Audit trail</Text>
-              <Text className="mt-2 text-sm text-ink">Created: {new Date(currentProduct.createdAt).toLocaleString()}</Text>
-              <Text className="mt-1 text-sm text-ink">Updated: {new Date(currentProduct.updatedAt).toLocaleString()}</Text>
+            <View className="mb-6 rounded-[24px] border border-[#F3D8BF] bg-surface px-4 py-4">
+              <Text className="text-xs font-semibold uppercase tracking-[1.5px] text-slate">Audit trail</Text>
+              <Text className="mt-2 text-sm text-charcoal">Created: {new Date(currentProduct.createdAt).toLocaleString()}</Text>
+              <Text className="mt-1 text-sm text-charcoal">Updated: {new Date(currentProduct.updatedAt).toLocaleString()}</Text>
             </View>
           ) : null}
 
-          <Pressable className="rounded-2xl bg-brand px-4 py-4" disabled={isSubmitting} onPress={onSubmit}>
+          <Pressable className="rounded-[24px] bg-tomato px-4 py-4" disabled={isSubmitting} onPress={onSubmit}>
             <Text className="text-center text-base font-semibold text-white">
               {isSubmitting ? 'Saving...' : submitLabel}
             </Text>
           </Pressable>
 
           {currentProduct ? (
-            <Pressable className="mt-3 rounded-2xl bg-white px-4 py-4" onPress={handleDelete}>
+            <Pressable className="mt-3 rounded-[24px] border border-[#FFD3D3] bg-[#FFF4F4] px-4 py-4" onPress={handleDelete}>
               <Text className="text-center text-base font-semibold text-danger">Delete product</Text>
             </Pressable>
           ) : null}
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -125,3 +125,28 @@ export async function readExportedCsvFile(fileUri: string) {
     encoding: FileSystem.EncodingType.UTF8,
   });
 }
+
+export async function renameExportedCsvFile(fileUri: string, nextBaseName: string) {
+  const directory = await ensureExportsDirectory();
+  const trimmedName = nextBaseName.trim().replace(/[/\\:*?"<>|]/g, '-');
+
+  if (!trimmedName) {
+    throw new Error('File name cannot be empty.');
+  }
+
+  const nextFileName = trimmedName.endsWith('.csv') ? trimmedName : `${trimmedName}.csv`;
+  const nextFileUri = `${directory}${nextFileName}`;
+
+  if (nextFileUri === fileUri) {
+    return { fileName: nextFileName, fileUri: nextFileUri };
+  }
+
+  const existingInfo = await FileSystem.getInfoAsync(nextFileUri);
+  if (existingInfo.exists) {
+    throw new Error('A CSV with this name already exists.');
+  }
+
+  await FileSystem.moveAsync({ from: fileUri, to: nextFileUri });
+
+  return { fileName: nextFileName, fileUri: nextFileUri };
+}
