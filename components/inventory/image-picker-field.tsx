@@ -56,19 +56,26 @@ export function ImagePickerField({ imageUri, onChange }: Props) {
               allowsEditing: true,
               aspect: [4, 3],
               quality: 0.8,
+              base64: true,
             })
           : await ImagePicker.launchImageLibraryAsync({
               mediaTypes: ['images'],
               allowsEditing: true,
               aspect: [4, 3],
               quality: 0.8,
+              base64: true,
             });
 
       if (result.canceled || !result.assets[0]?.uri) {
         return;
       }
 
-      const storedUri = await moveImageToAppStorage(result.assets[0].uri);
+      const asset = result.assets[0];
+      const storedUri = await moveImageToAppStorage(asset.uri, {
+        base64: asset.base64,
+        fileName: asset.fileName,
+        mimeType: asset.mimeType,
+      });
       onChange(storedUri);
     } catch (error) {
       console.error('Image pick failed', error);
